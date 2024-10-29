@@ -1,3 +1,14 @@
+# Lincoln Robotics FTC14298
+
+Who is code and are they in the room with us?
+
+## Contributors:
+<a href="https://github.com/LincolnRoboticsFTC14298/Robotics2024-25/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=LincolnRoboticsFTC14298/Robotics2024-25" />
+</a>
+
+---
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the INTO THE DEEP (2024-2025) competition season.
