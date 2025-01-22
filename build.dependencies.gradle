@@ -3,6 +3,11 @@ repositories {
     google() // Needed for androidx
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 dependencies {
     implementation 'org.firstinspires.ftc:Inspection:10.1.0'
     implementation 'org.firstinspires.ftc:Blocks:10.1.0'
@@ -12,6 +17,5 @@ dependencies {
     implementation 'org.firstinspires.ftc:Hardware:10.1.0'
     implementation 'org.firstinspires.ftc:FtcCommon:10.1.0'
     implementation 'org.firstinspires.ftc:Vision:10.1.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'//TODO: May need to updated
 }
-
