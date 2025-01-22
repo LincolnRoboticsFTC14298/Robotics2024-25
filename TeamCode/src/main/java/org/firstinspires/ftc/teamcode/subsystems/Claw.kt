@@ -26,46 +26,32 @@ import org.firstinspires.ftc.teamcode.FieldConfig
 class Claw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition) : SubsystemBase() {
 
     private val servo = SimpleServo(hwMap, clawServoName, 0.0, 360.0)
-    //private var colorSensor = hwMap.get(NormalizedColorSensor::class.java, colorSensorName)
-
-    //private var timer = ElapsedTime()
-    //private lateinit var motionProfile: TimeProfile
 
     private var setpoint: Double = 0.0
         set(position) {
             field = clip(position, 0.0, 1.0)
-
-
-            //timer.reset()
-            //motionProfile = TimeProfile(constantProfile(position - getPositionEstimate(), 0.0, clawMaxVel, -clawMaxAccel, clawMaxAccel).baseProfile)
             Log.i("Claw desired position", setpoint.toString())
         }
 
     init {
-        //colorSensor.gain = colorGain.toFloat()
         setpoint = startingPosition
         servo.position = startingPosition
     }
 
     override fun periodic() {
         Log.v("Claw estimated angle", getPositionEstimate().toString())
-        //servo.position = motionProfile[timer.seconds()].value()
         servo.position = setpoint
     }
 
     /**
-     * Open to pick up the cone
+     * Open claw to pick up the thing. TODO make better name for "thing" yk yk
      */
     fun open() {
         setpoint = clawOpenedPosition
     }
 
-    fun partiallyOpen() {
-        setpoint = clawPartiallyOpenedPosition
-    }
-
     /**
-     * Turn servo on at a constant speed to spit out cone.
+     * Close claw to grab the thing.
      */
     fun close() {
         setpoint = clawClosedPosition
@@ -121,8 +107,6 @@ class Claw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition) : 
         var clawClosedPosition = 0.10
         @JvmField
         var clawOpenedPosition = 0.15
-        @JvmField
-        var clawPartiallyOpenedPosition = 0.80
 
 
         @JvmField

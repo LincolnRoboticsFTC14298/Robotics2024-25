@@ -19,10 +19,6 @@ import com.qualcomm.robotcore.util.Range.clip
 @Config
 class DualClaw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition) : SubsystemBase() {
     private val servo = SimpleServo(hwMap, clawServoName, 0.0, 360.0)
-    //private var colorSensor = hwMap.get(NormalizedColorSensor::class.java, colorSensorName)
-
-    //private var timer = ElapsedTime()
-    //private lateinit var motionProfile: TimeProfile
 
     private enum class DualClawState {
         CLOSED,
@@ -36,9 +32,6 @@ class DualClaw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition
         set(position) {
             field = clip(position, 0.0, 1.0)
 
-
-            //timer.reset()
-            //motionProfile = TimeProfile(constantProfile(position - getPositionEstimate(), 0.0, clawMaxVel, -clawMaxAccel, clawMaxAccel).baseProfile)
             Log.i("Claw desired position", setpoint.toString())
         }
 
@@ -77,7 +70,6 @@ class DualClaw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition
     }
 
     init {
-        //colorSensor.gain = colorGain.toFloat()
         setpoint = startingPosition
         servo.position = startingPosition
         clawState = DualClawState.CLOSED
@@ -85,51 +77,52 @@ class DualClaw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition
 
     override fun periodic() {
         Log.v("Claw estimated angle", getPositionEstimate().toString())
-        //servo.position = motionProfile[timer.seconds()].value()
         servo.position = setpoint
     }
 
+    /**
+     * Sets position of the servo to a value between 0 and 1 (numbers outside of this range will be clipped).
+     */
     fun setPosition(pos: Double) {
         servo.position = pos
     }
 
-    fun releaseFirst() {
-        setpoint = clawPartiallyOpenedPosition
-        clawState = DualClawState.PARTIAL
-    }
-
-    fun releaseSecond() {
-        if(clawState == DualClawState.PARTIAL) {
-            setpoint = clawReleasePosition
-            clawState = DualClawState.FULL
-        }
+    /**
+     * Opens the claw to release position (only meant to be used when depositing into the bucket).
+     */
+    fun release() {
+        setpoint = clawReleasePosition
+        clawState = DualClawState.FULL
     }
 
     /**
-     * Open to pick up the cone
+     * Open claw fully to pick up the thing
      */
     fun open() {
         setpoint = clawOpenedPosition
         clawState = DualClawState.FULL
     }
 
+    /**
+     * Open claw partially to pick up the thing
+     */
     fun partiallyOpen() {
         setpoint = clawPartiallyOpenedPosition
         clawState = DualClawState.PARTIAL
     }
 
     /**
-     * Turn servo on at a constant speed to spit out cone.
+     * Close claw
      */
     fun close() {
         setpoint = clawClosedPosition
         clawState = DualClawState.CLOSED
     }
-    /**
-     * Incrament opening by 1
-     */
 
-    fun incramentOpen() {
+    /**
+     * Increment open by 1
+     */
+    fun incrementOpen() {
         if (clawState == DualClawState.CLOSED) {
             setpoint = clawPartiallyOpenedPosition
             clawState = DualClawState.PARTIAL
@@ -139,7 +132,10 @@ class DualClaw(hwMap: HardwareMap, startingPosition: Double = clawClosedPosition
         }
     }
 
-    fun incramentClosed() {
+    /**
+     * Increment closed by 1
+     */
+    fun incrementClosed() {
         if (clawState == DualClawState.FULL) {
             setpoint = clawPartiallyOpenedPosition
             clawState = DualClawState.PARTIAL
